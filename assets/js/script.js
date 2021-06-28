@@ -60,6 +60,8 @@ var createTaskEl = function(taskDataObj) {
 
   tasks.push(taskDataObj);
 
+  saveTasks();
+
   // create task actions (buttons and select) for task
   var taskActionsEl = createTaskActions(taskIdCounter);
   listItemEl.setAttribute("draggable", "true");
@@ -130,6 +132,8 @@ var completeEditTask = function(taskName, taskType, taskId) {
     }
   };
 
+  saveTasks();
+
   alert("Task Updated!");
 
   // remove data attribute from form
@@ -180,6 +184,8 @@ var taskStatusChangeHandler = function(event) {
       tasks[i].status = statusValue;
     }
   };
+
+  saveTasks();
 };
 
 var editTask = function(taskId) {
@@ -219,6 +225,8 @@ var deleteTask = function(taskId) {
 
   // reassign tasks array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
+
+  saveTasks();
 };
 
 var dragTaskHandler = function(event) {
@@ -261,6 +269,8 @@ var dropTaskHandler = function(event) {
       tasks[i].status = statusSelectEl.value.toLowerCase();
     }
   }
+
+  saveTasks();
 };
 
 var dragLeaveHandler = function(event) {
@@ -290,6 +300,10 @@ var tasks = [
     status: "to do"
   }
 ];
+
+var saveTasks = function() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
