@@ -295,7 +295,7 @@ var tasks = [
   },
   {
     id: 3,
-    name: "Refactore code",
+    name: "Refactor code",
     type: "Web",
     status: "to do"
   }
@@ -304,6 +304,58 @@ var tasks = [
 var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+
+var loadTasks = function() {
+  var savedTasks = localStorage.getItem("tasks");
+
+  if (!savedTasks) {
+    return false;
+  }
+
+  savedTasks = JSON.parse(savedTasks);
+
+  // loop through savedTasks array
+  for (var i = 0; i < savedTasks.length; i++) {
+    // pass each task object inot the `createTaskEl()` function
+    createTaskEl(savedTasks[i]);
+  }
+}
+
+
+var createTaskEl = function(taskDataObj) {
+  // create list item
+  var listItemEl = document.createElement("li");
+  listItemEl.className = "task-item";
+
+  // add task id as a custom attribute
+  listItemEl.setAttribute("data-task-id", taskIdCounter);
+
+  // create div to hold task info and add to list item
+  var taskInfoEl = document.createElement("div");
+  // give it a class name
+  taskInfoEl.classname = "task-info";
+  // add HTML content to div
+  taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
+
+  listItemEl.appendChild(taskInfoEl);
+
+  taskDataObj.id = taskIdCounter;
+
+  tasks.push(taskDataObj);
+
+  saveTasks();
+
+  // create task actions (buttons and select) for task
+  var taskActionsEl = createTaskActions(taskIdCounter);
+  listItemEl.setAttribute("draggable", "true");
+  listItemEl.appendChild(taskActionsEl);
+
+  // add entire list itme to list
+  tasksToDoEl.appendChild(listItemEl);
+
+  // increase task counter for next unique id
+  taskIdCounter++;
+};
 
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
